@@ -148,7 +148,3 @@ export MONGO_DBNAME="my_database"
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-This version omits unit tests and focuses on the core functionality and setup of the package.
