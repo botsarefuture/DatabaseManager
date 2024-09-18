@@ -1,12 +1,10 @@
 from pymongo import MongoClient
-from config import Config
-
 
 class DatabaseManager:
-    def __init__(self):
+    def __init__(self, config):
         self.client = None
         self.db = None
-        self.config = Config()
+        self.config = config
         self.init_db()
 
     def init_db(self):
