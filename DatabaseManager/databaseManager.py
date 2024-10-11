@@ -1,8 +1,9 @@
 import logging
 import os
+import sys
 from pymongo import MongoClient, errors
 from threading import Lock
-from config import Config  # Import the Config class
+import importlib.util
 
 # Setup logging
 logger = logging.getLogger(__name__)
@@ -11,14 +12,17 @@ class DatabaseManager:
     _instance = None  # Singleton pattern
     _lock = Lock()  # For thread safety
 
-    def __init__(self):
+    def __init__(self, config_class=None):
         """
         Initializes the DatabaseManager. A single MongoDB client is used, and databases can be accessed dynamically.
+
+        Args:
+        - config_class (Optional): User can provide their own config class. If None, attempts to load 'Config' from the caller's directory.
         """
         if DatabaseManager._instance is None:
             with DatabaseManager._lock:
                 if DatabaseManager._instance is None:
-                    self.config = Config()
+                    self.config = config_class or self._load_config()
                     logger.info("Initializing DatabaseManager instance.")
                     # Load URI and default DB name from Config class
                     self.mongo_uri = self.config.MONGO_URI or 'mongodb://localhost:27017'
@@ -29,6 +33,33 @@ class DatabaseManager:
                     DatabaseManager._instance = self  # Save as singleton instance
         else:
             logger.warning("DatabaseManager instance already initialized. Returning existing instance.")
+
+    def _load_config(self):
+        """
+        Dynamically load the Config class from the directory of the script that imports this package.
+        If no Config class is provided by the user, this method attempts to load it from the caller's directory.
+        """
+        # Get the caller's directory (the directory from where this class was imported)
+        caller_frame = sys._getframe(1)
+        caller_file = caller_frame.f_globals.get("__file__", None)
+        if not caller_file:
+            raise RuntimeError("Unable to locate the calling script's directory.")
+
+        caller_dir = os.path.dirname(os.path.abspath(caller_file))
+        config_path = os.path.join(caller_dir, "config.py")
+        
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Config file not found in: {caller_dir}")
+
+        # Import the config module dynamically
+        spec = importlib.util.spec_from_file_location("config", config_path)
+        config_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(config_module)
+
+        if not hasattr(config_module, "Config"):
+            raise AttributeError(f"'Config' class not found in {config_path}")
+        
+        return config_module.Config()
 
     def _init_client(self):
         """
@@ -93,14 +124,15 @@ class DatabaseManager:
             logger.warning("Attempted to close a non-existent MongoDB connection.")
 
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls, config_class=None):
         """
         Singleton pattern to ensure only one instance of DatabaseManager is used.
+        Optionally allows passing a custom config class.
         """
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
-                    cls._instance = DatabaseManager()
+                    cls._instance = DatabaseManager(config_class)
         return cls._instance
 
     @staticmethod
