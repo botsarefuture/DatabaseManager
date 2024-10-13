@@ -68,7 +68,7 @@ from DatabaseManager import Config, DatabaseManager
 config = Config().load_from_json("path/to/your/config.json")
 
 # Initialize the DatabaseManager with the custom config
-db_manager = DatabaseManager(config)
+db_manager = DatabaseManager(config).get_instance()
 
 # Retrieve the MongoDB database instance
 db = db_manager.get_db()
@@ -97,7 +97,7 @@ config.MONGO_URI = 'mongodb://localhost:27017'
 config.MONGO_DBNAME = 'custom_database'
 
 # Initialize the DatabaseManager with the custom config
-db_manager = DatabaseManager(config)
+db_manager = DatabaseManager(config).get_instance()
 ```
 
 ### Error Handling
@@ -106,7 +106,7 @@ The package includes error handling for connection issues. If the database conne
 
 ```python
 try:
-    db_manager = DatabaseManager(config)
+    db_manager = DatabaseManager(config).get_instance()
     db = db_manager.get_db()
 except RuntimeError as e:
     print(f"Error: {e}")
