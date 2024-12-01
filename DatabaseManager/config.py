@@ -14,13 +14,16 @@ class Config:
         Initializes the configuration. Loads settings from environment variables,
         a provided config file, or defaults.
 
-        Args:
-        - config_file (str): Optional file path to load configuration from.
-        - config_type (str): Type of configuration file ('json', 'yaml', or 'ini').
+        Parameters
+        ----------
+        config_file : str, optional
+            Optional file path to load configuration from.
+        config_type : str, optional
+            Type of configuration file ('json', 'yaml', or 'ini').
         """
         # Default values
-        self.MONGO_URI = "mongodb://localhost:27017"
-        self.MONGO_DBNAME = "testdb"
+        self._mongo_uri = "mongodb://localhost:27017"
+        self._mongo_dbname = "testdb"
 
         # Load from environment variables if set
         self.load_from_env()
@@ -33,16 +36,19 @@ class Config:
         """
         Loads configuration values from environment variables, if they exist.
         """
-        self.MONGO_URI = os.getenv('MONGO_URI', self.MONGO_URI)
-        self.MONGO_DBNAME = os.getenv('MONGO_DBNAME', self.MONGO_DBNAME)
+        self._mongo_uri = os.getenv('MONGO_URI', self._mongo_uri)
+        self._mongo_dbname = os.getenv('MONGO_DBNAME', self._mongo_dbname)
 
     def load_from_file(self, file_path, file_type='json'):
         """
         Loads configuration values from a file (JSON, YAML, or INI format).
 
-        Args:
-        - file_path (str): The path to the config file.
-        - file_type (str): The file format ('json', 'yaml', or 'ini').
+        Parameters
+        ----------
+        file_path : str
+            The path to the config file.
+        file_type : str, optional
+            The file format ('json', 'yaml', or 'ini').
         """
         if file_type == 'json':
             self._load_from_json(file_path)
@@ -57,14 +63,16 @@ class Config:
         """
         Loads configuration from a JSON file.
 
-        Args:
-        - file_path (str): The path to the JSON config file.
+        Parameters
+        ----------
+        file_path : str
+            The path to the JSON config file.
         """
         try:
             with open(file_path, 'r') as f:
                 config_data = json.load(f)
-            self.MONGO_URI = config_data.get('MONGO_URI', self.MONGO_URI)
-            self.MONGO_DBNAME = config_data.get('MONGO_DBNAME', self.MONGO_DBNAME)
+            self._mongo_uri = config_data.get('MONGO_URI', self._mongo_uri)
+            self._mongo_dbname = config_data.get('MONGO_DBNAME', self._mongo_dbname)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             raise RuntimeError(f"Failed to load config from {file_path}: {str(e)}")
 
@@ -72,14 +80,16 @@ class Config:
         """
         Loads configuration from a YAML file.
 
-        Args:
-        - file_path (str): The path to the YAML config file.
+        Parameters
+        ----------
+        file_path : str
+            The path to the YAML config file.
         """
         try:
             with open(file_path, 'r') as f:
                 config_data = yaml.safe_load(f)
-            self.MONGO_URI = config_data.get('MONGO_URI', self.MONGO_URI)
-            self.MONGO_DBNAME = config_data.get('MONGO_DBNAME', self.MONGO_DBNAME)
+            self._mongo_uri = config_data.get('MONGO_URI', self._mongo_uri)
+            self._mongo_dbname = config_data.get('MONGO_DBNAME', self._mongo_dbname)
         except (FileNotFoundError, yaml.YAMLError) as e:
             raise RuntimeError(f"Failed to load config from {file_path}: {str(e)}")
 
@@ -87,14 +97,16 @@ class Config:
         """
         Loads configuration from an INI file.
 
-        Args:
-        - file_path (str): The path to the INI config file.
+        Parameters
+        ----------
+        file_path : str
+            The path to the INI config file.
         """
         try:
             config = configparser.ConfigParser()
             config.read(file_path)
-            self.MONGO_URI = config.get('MongoDB', 'MONGO_URI', fallback=self.MONGO_URI)
-            self.MONGO_DBNAME = config.get('MongoDB', 'MONGO_DBNAME', fallback=self.MONGO_DBNAME)
+            self._mongo_uri = config.get('MongoDB', 'MONGO_URI', fallback=self._mongo_uri)
+            self._mongo_dbname = config.get('MongoDB', 'MONGO_DBNAME', fallback=self._mongo_dbname)
         except Exception as e:
             raise RuntimeError(f"Failed to load config from {file_path}: {str(e)}")
 
@@ -102,11 +114,13 @@ class Config:
         """
         Updates the configuration values with the provided dictionary.
 
-        Args:
-        - config_dict (dict): A dictionary containing configuration values.
+        Parameters
+        ----------
+        config_dict : dict
+            A dictionary containing configuration values.
         """
-        self.MONGO_URI = config_dict.get('MONGO_URI', self.MONGO_URI)
-        self.MONGO_DBNAME = config_dict.get('MONGO_DBNAME', self.MONGO_DBNAME)
+        self._mongo_uri = config_dict.get('MONGO_URI', self._mongo_uri)
+        self._mongo_dbname = config_dict.get('MONGO_DBNAME', self._mongo_dbname)
 
     def __repr__(self):
-        return f"Config(MONGO_URI={self.MONGO_URI}, MONGO_DBNAME={self.MONGO_DBNAME})"
+        return f"Config(MONGO_URI={self._mongo_uri}, MONGO_DBNAME={self._mongo_dbname})"
