@@ -14,34 +14,17 @@
 
 - **Python:** 3.7+
 - **Dependencies:** `pymongo`
-
+- 
 ## Installation
 
-1. **Clone the Repository:**
+1. **Install Directly from the GitHub Repository**:  
 
-   Start by cloning the repository or downloading it directly:
-
-   ```bash
-   git clone https://github.com/botsarefuture/DatabaseManager.git
-   cd DatabaseManager
-   ```
-
-2. **Install the Package:**
-
-   Use `pip` to install the package and its dependencies:
+   The package is not available on PyPI, so you need to install it directly from the source:  
 
    ```bash
-   pip install .
+   pip install git+https://github.com/botsarefuture/DatabaseManager.git
    ```
-
-3. **Install from PyPI (Optional):**
-
-   If the package is available on PyPI, you can install it directly using:
-
-   ```bash
-   pip install DatabaseManager
-   ```
-
+   
 ## Usage
 
 ### Configuration Setup
