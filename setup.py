@@ -6,7 +6,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name="DatabaseManager",
-    version="1.1.0",  # Incremented version
+    version="1.1.2",  # Incremented version
     packages=find_packages(),
     install_requires=[
         "pymongo>=3.11",  # Minimum version of pymongo

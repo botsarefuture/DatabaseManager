@@ -23,7 +23,7 @@ class Config:
         """
         # Default values
         self._mongo_uri = "mongodb://localhost:27017"
-        self._mongo_dbname = "testdb"
+        self._mongo_dbname = "testdb"       
 
         # Load from environment variables if set
         self.load_from_env()
@@ -32,6 +32,22 @@ class Config:
         if config_file:
             self.load_from_file(config_file, config_type)
 
+    @property
+    def MONGO_URI(self):
+        return self._mongo_uri
+
+    @MONGO_URI.setter
+    def MONGO_URI(self, value):
+        self._mongo_uri = value
+
+    @property
+    def MONGO_DBNAME(self):
+        return self._mongo_dbname
+
+    @MONGO_DBNAME.setter
+    def MONGO_DBNAME(self, value):
+        self._mongo_dbname = value
+    
     def load_from_env(self):
         """
         Loads configuration values from environment variables, if they exist.
