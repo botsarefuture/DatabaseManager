@@ -29,7 +29,13 @@
 
 ### Configuration Setup
 
-You can configure your MongoDB settings using the built-in `Config` class. The `Config` class allows loading your settings from a JSON file or passing them directly.
+You can configure your MongoDB settings using the built-in `Config` class. The `DatabaseManager` will attempt to load the `Config` class from your project's directory or the directory where `databaseManager.py` resides, depending on how it is imported.
+
+### Automatic Configuration Loading
+
+The `DatabaseManager` automatically attempts to load a `config.py` file containing a `Config` class from your project's directory. If your project structure places the importing script in the same directory as `databaseManager.py`, it adjusts accordingly to find the correct `config.py`.
+
+Ensure you have a `config.py` file with a `Config` class defined using underscores for field names:
 
 #### Example Configuration File (`config.json`):
 

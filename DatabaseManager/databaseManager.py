@@ -38,8 +38,7 @@ class DatabaseManager:
 
     def _load_config(self):
         """
-        Dynamically load the Config class from the directory of the script that imports this package.
-        If no Config class is provided by the user, this method attempts to load it from the caller's directory.
+        Dynamically load the Config class from the appropriate directory based on the caller's location.
 
         Returns
         -------
@@ -53,10 +52,21 @@ class DatabaseManager:
             raise RuntimeError("Unable to locate the calling script's directory.")
 
         caller_dir = os.path.dirname(os.path.abspath(caller_file))
+        own_dir = os.path.dirname(os.path.abspath(__file__))
+
+        if caller_dir == own_dir:
+            # Caller is in the same directory as this file
+            caller_frame = sys._getframe(2)
+            caller_file = caller_frame.f_globals.get("__file__", None)
+            if not caller_file:
+                raise RuntimeError("Unable to locate the calling script's directory.")
+
+            caller_dir = os.path.dirname(os.path.abspath(caller_file))
+
         config_path = os.path.join(caller_dir, "config.py")
-        
+
         if not os.path.exists(config_path):
-            raise FileNotFoundError(f"Config file not found in: {caller_dir}")
+            raise FileNotFoundError(f"Config file not found in: {os.path.dirname(config_path)}")
 
         # Import the config module dynamically
         spec = importlib.util.spec_from_file_location("config", config_path)
