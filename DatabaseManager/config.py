@@ -5,8 +5,57 @@ import configparser
 
 class Config:
     """
-    A flexible configuration class that can load settings from defaults, 
-    environment variables, files (JSON, YAML, or INI), or direct input.
+    Configuration class for managing settings.
+
+    Attributes
+    ----------
+    _mongo_uri : str
+        The URI for the MongoDB connection.
+    _mongo_dbname : str
+        The name of the MongoDB database.
+
+    Methods
+    -------
+    load_from_env()
+        Loads configuration values from environment variables.
+    load_from_file(file_path, file_type='json')
+        Loads configuration values from a file (JSON, YAML, or INI format).
+    update_config(config_dict)
+        Updates the configuration values with the provided dictionary.
+
+    Examples
+    --------
+    >>> config = Config()
+    >>> config.MONGO_URI
+    'mongodb://localhost:27017'
+    >>> config.MONGO_DBNAME
+    'testdb'
+
+    Load from environment variables:
+    >>> import os
+    >>> os.environ['MONGO_URI'] = 'mongodb://example.com:27017'
+    >>> os.environ['MONGO_DBNAME'] = 'exampledb'
+    >>> config.load_from_env()
+    >>> config.MONGO_URI
+    'mongodb://example.com:27017'
+    >>> config.MONGO_DBNAME
+    'exampledb'
+
+    Load from a JSON file:
+    >>> config.load_from_file('config.json', 'json')
+
+    Load from a YAML file:
+    >>> config.load_from_file('config.yaml', 'yaml')
+
+    Load from an INI file:
+    >>> config.load_from_file('config.ini', 'ini')
+
+    Update configuration directly:
+    >>> config.update_config({'MONGO_URI': 'mongodb://newhost:27017', 'MONGO_DBNAME': 'newdb'})
+    >>> config.MONGO_URI
+    'mongodb://newhost:27017'
+    >>> config.MONGO_DBNAME
+    'newdb'
     """
 
     def __init__(self, config_file=None, config_type='json'):
