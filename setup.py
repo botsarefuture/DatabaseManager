@@ -6,7 +6,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name="DatabaseManager",
-    version="1.3.0",  # Incremented version
+    version="2.0.0",  # Incremented version
     packages=find_packages(),
     install_requires=[
         "pymongo>=3.11",  # Minimum version of pymongo
@@ -14,8 +14,8 @@ setup(
     description="A simple and efficient MongoDB manager package for Python applications.",
     long_description=long_description,
     long_description_content_type='text/markdown',  # Specify that the long description is in Markdown
-    author="Verso Vuorenmaa",
-    author_email="verso@luova.club",
+    author="Emilia Vuorenmaa",
+    author_email="emilia@luova.club",
     url="https://github.com/botsarefuture/DatabaseManager",  # Update with your repo link
     classifiers=[
         "Programming Language :: Python :: 3.7",  # Updated Python version requirement
